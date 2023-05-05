@@ -1,12 +1,21 @@
 const router = require("express").Router();
-const { Product, Category, Tag, ProductTag } = require("../../models");
+const {
+  Product,
+  Category,
+  Tag,
+  ProductTag,
+} = require("../../models/modelIndex");
 
 // The `/api/products` endpoint
 
 // get all products
 router.get("/", (req, res) => {
   // find all products
-  Product.findAll()
+  Product.findAll({
+    include: [ProductTag],
+    include: [Category],
+    include: [Tag],
+  })
     .then((products) => {
       res.json(products);
     })
@@ -20,7 +29,11 @@ router.get("/", (req, res) => {
 // get one product
 router.get("/:id", (req, res) => {
   // find a single product by its `id`
-  Product.findByPk(req.params.id)
+  Product.findByPk(req.params.id, {
+    include: [ProductTag],
+    include: [Category],
+    include: [Tag],
+  })
     .then((ProductData) => {
       res.json(ProductData);
     })
@@ -33,14 +46,14 @@ router.get("/:id", (req, res) => {
 
 // create new product
 router.post("/", (req, res) => {
-  Traveller.create({
+  Product.create({
     product_name: req.body.product_name,
     price: req.body.price,
     stock: req.body.stock,
-    tagIds: req.body.tagIds,
+    tagIds: [],
   })
-    .then((newTraveller) => {
-      res.json(newTraveller);
+    .then((newProduct) => {
+      res.json(newProduct);
     })
     .catch((err) => {
       console.log(err);
