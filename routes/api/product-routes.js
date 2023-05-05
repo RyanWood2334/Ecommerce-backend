@@ -12,7 +12,6 @@ const {
 router.get("/", (req, res) => {
   // find all products
   Product.findAll({
-    include: [ProductTag],
     include: [Category],
     include: [Tag],
   })
@@ -30,7 +29,6 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
   // find a single product by its `id`
   Product.findByPk(req.params.id, {
-    include: [ProductTag],
     include: [Category],
     include: [Tag],
   })
@@ -93,6 +91,10 @@ router.post("/", (req, res) => {
 router.put("/:id", (req, res) => {
   // update product data
   Product.update(req.body, {
+    product_name: req.body.product_name,
+    price: req.body.price,
+    stock: req.body.stock,
+    tagIds: [],
     where: {
       id: req.params.id,
     },
